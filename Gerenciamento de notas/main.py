@@ -6,7 +6,7 @@ class Application:
         self.janela = ctk.CTk(fg_color="white")
         self.tema()
         self.tela()
-        self.tela_login = Telalogin(self.janela)
+        self.tela_login = Telalogin(self.janela)  # Instancia a tela de login
         self.janela.mainloop()
 
     def tema(self):

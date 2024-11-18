@@ -1,8 +1,8 @@
-import sqlite3
+from tkinter import PhotoImage
 from tkinter import messagebox
 import customtkinter as ctk
-from tkinter import PhotoImage
-from tela_principal import TelaPrincipal  # Importando a nova classe
+import sqlite3
+from tela_principal import App  # Certifique-se de que tela_principal.py existe e é funcional.
 
 class backEnd:
     def conecta_db(self):
@@ -15,7 +15,6 @@ class backEnd:
 class Telalogin(backEnd):
     def __init__(self, janela):
         self.janela = janela
-        self.tela_principal = TelaPrincipal()  # Instanciando TelaPrincipal
         self.criar_tela_login()
 
     def criar_tela_login(self):
@@ -53,10 +52,12 @@ class Telalogin(backEnd):
         if not self.Email or not self.Senha:
             messagebox.showwarning("Sistema de Login", "Por favor, preencha todos os campos.")
         elif self.verifica_dados:
-            messagebox.showinfo("Sistema de Login", "Login feito com sucesso!")
+            #messagebox.showinfo("Sistema de Login", "Login feito com sucesso!")
             self.desconecta_db()
             self.janela.destroy()
-            self.tela_principal.criar_nova_janela()  # Chamada da nova janela
+
+            app = App()
+            app.mainloop()
         else:
             messagebox.showerror("Sistema de Login", "Usuário e/ou senha incorretos!")
             self.desconecta_db()
