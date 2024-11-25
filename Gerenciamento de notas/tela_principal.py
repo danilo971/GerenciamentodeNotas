@@ -109,10 +109,6 @@ class App(customtkinter.CTk):
         self.rotulo_tema.grid(row=5, column=0, padx=20, pady=(10, 0))
         self.menu_opcoes_tema.grid(row=6, column=0, padx=20, pady=(10, 10))
 
-        # Exibir o conteúdo inicial (sem menus)
-        texto_inicial = customtkinter.CTkLabel(self.tela_principal, text="Tela Inicial", font=customtkinter.CTkFont(size=24))
-        texto_inicial.pack(pady=20)
-
     def limpar_tela_principal(self):
         # Remove todos os widgets da tela principal
         for widget in self.tela_principal.winfo_children():

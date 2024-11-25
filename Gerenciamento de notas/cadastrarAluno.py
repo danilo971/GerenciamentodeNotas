@@ -1,16 +1,26 @@
 import customtkinter as ctk
+from tkinter import messagebox
+import sqlite3
 
+class backEnd:
+    def connect_db(self):
+        self.conn = sqlite3.connect("bd.db")
+        self.cursor = self.conn.cursor()
 
-class AplicativoRegistro:
+    def disconnect_db(self):
+        self.conn.close()
+
+class AplicativoRegistro(backEnd):
     def __init__(self):
         # Configuração principal
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
-        
+
         # Inicializa a janela principal
         self.janela = ctk.CTk()
         self.janela.title("Aplicativo de Registro")
         self.janela.geometry("600x500")
+        self.janela.resizable(False, False)
 
         # Variáveis
         self.aceitar_var = ctk.StringVar(value="Não Aceito")
@@ -41,11 +51,11 @@ class AplicativoRegistro:
         botao_enviar.grid(row=3, column=0, padx=10, pady=10)
 
     def criar_frame_usuario(self, parent):
-        """Cria o frame para informações do usuário."""
+        """Cria o frame para informações do aluno."""
         frame_usuario = ctk.CTkFrame(parent)
         frame_usuario.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        titulo_usuario = ctk.CTkLabel(frame_usuario, text="Informações do Usuário",
+        titulo_usuario = ctk.CTkLabel(frame_usuario, text="Informações do Aluno",
                                       font=ctk.CTkFont(size=16, weight="bold"))
         titulo_usuario.grid(row=0, column=0, columnspan=3, pady=(0, 10))
 
@@ -59,12 +69,12 @@ class AplicativoRegistro:
         self.entrada_ultimo_nome.grid(row=2, column=1, padx=5, pady=5)
 
         ctk.CTkLabel(frame_usuario, text="CPF").grid(row=1, column=2, padx=5, pady=5)
-        self.combobox_cpf = ctk.CTkEntry(frame_usuario)
-        self.combobox_cpf.grid(row=2, column=2, padx=5, pady=5)
+        self.entrada_cpf = ctk.CTkEntry(frame_usuario)
+        self.entrada_cpf.grid(row=2, column=2, padx=5, pady=5)
 
-        ctk.CTkLabel(frame_usuario, text="Idade").grid(row=3, column=0, padx=5, pady=5)
-        self.spinbox_idade = ctk.CTkEntry(frame_usuario, placeholder_text="17 - 110")
-        self.spinbox_idade.grid(row=4, column=0, padx=5, pady=5)
+        ctk.CTkLabel(frame_usuario, text="Data de Nascimento").grid(row=3, column=0, padx=5, pady=5)
+        self.entrada_data_nascimento = ctk.CTkEntry(frame_usuario, placeholder_text="DD/MM/AAAA")
+        self.entrada_data_nascimento.grid(row=4, column=0, padx=5, pady=5)
 
         ctk.CTkLabel(frame_usuario, text="Nacionalidade").grid(row=3, column=1, padx=5, pady=5)
         self.combobox_nacionalidade = ctk.CTkComboBox(frame_usuario, values=["Brasileiro", "Estrangeiro"])
@@ -80,59 +90,52 @@ class AplicativoRegistro:
         titulo_cursos.grid(row=0, column=0, columnspan=3, pady=(0, 10))
 
         # Campos de entrada para o curso
-        ctk.CTkLabel(frame_cursos, text="Nome do Curso").grid(row=1, column=0, padx=5, pady=5)
-        self.spinbox_cursos = ctk.CTkEntry(frame_cursos)
+        ctk.CTkLabel(frame_cursos, text="Turma do Curso").grid(row=1, column=0, padx=5, pady=5)
+        self.spinbox_cursos = ctk.CTkComboBox(frame_cursos, values=["1 - Sistema de Informação", "2 - Sistema de Informação", "3 - Sistema de Informação", "4 - Sistema de Informação", "5 - Sistema de Informação", "6 - Sistema de Informação", "7 - Sistema de Informação", "8 - Sistema de Informação"])
         self.spinbox_cursos.grid(row=2, column=0, padx=5, pady=5)
-
-        ctk.CTkLabel(frame_cursos, text="Semestres").grid(row=1, column=1, padx=5, pady=5)
-        self.spinbox_semestres = ctk.CTkEntry(frame_cursos, placeholder_text="0+")
-        self.spinbox_semestres.grid(row=2, column=1, padx=5, pady=5)
-
-        ctk.CTkLabel(frame_cursos, text="Status da Matrícula").grid(row=1, column=2, padx=5, pady=5)
-        check_matricula = ctk.CTkCheckBox(frame_cursos, text="Matriculado", variable=self.status_var,
-                                          onvalue="Matriculado", offvalue="Não Matriculado")
-        check_matricula.grid(row=2, column=2, padx=5, pady=5)
-
-    def criar_frame_termos(self, parent):
-        """Cria o frame para os termos e condições."""
-        frame_termos = ctk.CTkFrame(parent)
-        frame_termos.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
-
-        titulo_termos = ctk.CTkLabel(frame_termos, text="Termos e Condições",
-                                     font=ctk.CTkFont(size=16, weight="bold"))
-        titulo_termos.grid(row=0, column=0, pady=(0, 10))
-
-        check_termos = ctk.CTkCheckBox(frame_termos, text="Aceito os Termos e Condições.",
-                                       variable=self.aceitar_var, onvalue="Aceito", offvalue="Não Aceito")
-        check_termos.grid(row=1, column=0, padx=5, pady=5)
 
     def salvar_dados(self):
         """Lógica para salvar os dados inseridos pelo usuário."""
-        aceito = self.aceitar_var.get()
-        if aceito == "Aceito":
-            primeiro_nome = self.entrada_primeiro_nome.get()
-            ultimo_nome = self.entrada_ultimo_nome.get()
-            if primeiro_nome and ultimo_nome:
-                cpf = self.combobox_cpf.get()
-                idade = self.spinbox_idade.get()
-                nacionalidade = self.combobox_nacionalidade.get()
-                nome_curso = self.spinbox_cursos.get()
-                semestres = self.spinbox_semestres.get()
-                status_matricula = self.status_var.get()
+        try:
+            # Captura os dados
+            self.nome = self.entrada_primeiro_nome.get()
+            self.sobrenome = self.entrada_ultimo_nome.get()
+            self.cpf = self.entrada_cpf.get()
+            self.dataNascimento = self.entrada_data_nascimento.get()
+            self.nacionalidade = self.combobox_nacionalidade.get()
+            self.semestre_selecionado = int(self.spinbox_cursos.get().split(" ")[0])
 
-                dados = (f"Primeiro Nome: {primeiro_nome}\nÚltimo Nome: {ultimo_nome}\n"
-                         f"CPF: {cpf}\nIdade: {idade}\nNacionalidade: {nacionalidade}\n"
-                         f"Nome do Curso: {nome_curso}\nSemestres: {semestres}\n"
-                         f"Status da Matrícula: {status_matricula}\n{'-' * 40}\n")
+            # Verifica os campos obrigatórios
+            if not self.nome or not self.sobrenome or not self.cpf or not self.dataNascimento or not self.nacionalidade:
+                messagebox.showwarning("Erro", "Todos os campos devem ser preenchidos.")
+                return
 
-                print(dados)
-                with open("dados_matricula.txt", "a+") as f:
-                    f.write(dados)
+            # Conecta ao banco e insere os dados
+            self.connect_db()
+            self.cursor.execute(
+                """
+                INSERT INTO alunos (nome, sobrenome, cpf, data_nascimento, nacionalidade, semestre_ingresso)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (self.nome, self.sobrenome, self.cpf, self.dataNascimento, self.nacionalidade, self.semestre_selecionado)
+            )
+            self.conn.commit()
+            messagebox.showinfo("Sucesso", "Aluno registrado com sucesso!")
+
+        except sqlite3.Error as erro:
+            if "UNIQUE constraint failed: alunos.cpf" in str(erro):
+                messagebox.showerror("Erro", "CPF já cadastrado!")
             else:
-                ctk.CTkMessageBox(title="Erro no Nome", message="Nome e sobrenome são obrigatórios.")
-        else:
-            ctk.CTkMessageBox(title="Erro nos Termos", message="Por favor, aceite os Termos e Condições.")
+                print(f"Erro: {erro}")
+                messagebox.showerror("Erro no Banco de Dados", f"Erro ao adicionar aluno: {erro}")
+        finally:
+            self.disconnect_db()
 
+    def criar_frame_termos(self, parent):
+        """Cria o frame para os termos e condições."""
+        print("Método criar_frame_termos foi chamado")
+        frame_termos = ctk.CTkFrame(parent)
+        ...
 
 if __name__ == "__main__":
     app = AplicativoRegistro()

@@ -3,57 +3,29 @@ import sqlite3
 # Nome do arquivo do banco de dados
 banco = "bd.db"
 
-# Conexão com o banco de dados (será criado automaticamente se não existir)
+# Conexão com o banco de dados
 conexao = sqlite3.connect(banco)
 
-# Código SQL para criar as tabelas
+# Código SQL para criar a tabela diretamente
 sql_criacao = """
-CREATE TABLE IF NOT EXISTS usuarios (
-    id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS alunos (
+    id_aluno INTEGER PRIMARY KEY AUTOINCREMENT,
     nome TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    senha TEXT NOT NULL,
-    tipo_usuario TEXT NOT NULL CHECK (tipo_usuario IN ('Coordenador', 'Professor', 'Aluno'))
-);
-
-CREATE TABLE IF NOT EXISTS cursos (
-    id_curso INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_curso TEXT UNIQUE NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS disciplinas (
-    id_disciplina INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome_disciplina TEXT NOT NULL,
-    id_curso INTEGER NOT NULL,
-    FOREIGN KEY (id_curso) REFERENCES cursos (id_curso)
-);
-
-CREATE TABLE IF NOT EXISTS notas (
-    id_nota INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_aluno INTEGER NOT NULL,
-    id_disciplina INTEGER NOT NULL,
-    nota REAL NOT NULL,
-    FOREIGN KEY (id_aluno) REFERENCES usuarios (id_usuario),
-    FOREIGN KEY (id_disciplina) REFERENCES disciplinas (id_disciplina)
-);
-
-CREATE TABLE IF NOT EXISTS faltas (
-    id_falta INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_aluno INTEGER NOT NULL,
-    id_disciplina INTEGER NOT NULL,
-    quantidade_faltas INTEGER NOT NULL,
-    FOREIGN KEY (id_aluno) REFERENCES usuarios (id_usuario),
-    FOREIGN KEY (id_disciplina) REFERENCES disciplinas (id_disciplina)
+    sobrenome TEXT NOT NULL,
+    cpf TEXT UNIQUE NOT NULL,
+    data_nascimento TEXT NOT NULL,
+    nacionalidade TEXT NOT NULL CHECK (nacionalidade IN ('Brasileiro', 'Estrangeiro')),
+    semestre_ingresso INTEGER NOT NULL CHECK (semestre_ingresso BETWEEN 1 AND 8)
 );
 """
 
 # Execução do código SQL
 try:
     cursor = conexao.cursor()
-    cursor.executescript(sql_criacao)
-    print("Banco de dados e tabelas criados com sucesso!")
+    cursor.execute(sql_criacao)
+    print("Tabela 'alunos' criada com sucesso!")
 except sqlite3.Error as erro:
-    print("Erro ao criar o banco de dados:", erro)
+    print("Erro ao criar a tabela 'alunos':", erro)
 finally:
     # Fechar a conexão
     conexao.close()
