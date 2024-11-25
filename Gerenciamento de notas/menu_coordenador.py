@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from PIL import Image
+from cadastrarAluno import AplicativoRegistro
 
 class MenuCoordenador(ctk.CTkFrame):
     def __init__(self, master=None):
@@ -13,7 +14,7 @@ class MenuCoordenador(ctk.CTkFrame):
 
         # Botões
         self.imagem_aluno = self.adicionar_aluno()
-        self.botao = ctk.CTkButton(self, image=self.imagem_aluno, text="    Adicionar Aluno    ", compound="left", command=self.acao_aluno)
+        self.botao = ctk.CTkButton(self, image=self.imagem_aluno, text="    Adicionar Aluno    ", compound="left", command=AplicativoRegistro)
         self.botao.grid(row=1, column=1, padx=20, pady=10)
 
         self.imagem_professor = self.adicionar_professor()

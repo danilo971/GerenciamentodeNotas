@@ -1,17 +1,21 @@
-import tkinter as tk
+import sqlite3
 
-# Cria a janela principal
-root = tk.Tk()
+# Conexão com o banco
+conexao = sqlite3.connect("bd.db")
+cursor = conexao.cursor()
 
-# Obtém a largura e altura da tela
-largura_tela = root.winfo_screenwidth()
-altura_tela = root.winfo_screenheight()
+# Inserir dados iniciais
+dados_iniciais = [
+    ("Admin", "coordenador@teste.com", "1234", "Coordenador"),
+    ("João Silva", "professor@teste.com", "1234", "Professor"),
+    ("Maria Souza", "aluno@teste.com", "1234", "Aluno"),
+]
 
-# Define o tamanho da janela para ocupar toda a tela
-root.geometry(f"{largura_tela}x{altura_tela}")
-
-# Define a janela como não redimensionável
-root.resizable(False, False)
-
-# Executa o loop principal da aplicação
-root.mainloop()
+try:
+    cursor.executemany("INSERT INTO usuarios (nome, email, senha, tipo_usuario) VALUES (?, ?, ?, ?)", dados_iniciais)
+    conexao.commit()
+    print("Dados iniciais inseridos com sucesso!")
+except sqlite3.IntegrityError as e:
+    print(f"Erro: {e}")
+finally:
+    conexao.close()

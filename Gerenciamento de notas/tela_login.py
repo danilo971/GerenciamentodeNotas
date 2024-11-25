@@ -46,7 +46,7 @@ class Telalogin(backEnd):
 
         self.conecta_db()
 
-        self.cursor.execute("SELECT * FROM Usuario WHERE Email = ? AND Senha = ?", (self.Email, self.Senha))
+        self.cursor.execute("SELECT * FROM usuarios WHERE email = ? AND senha = ?", (self.Email, self.Senha))
         self.verifica_dados = self.cursor.fetchone()
 
         if not self.Email or not self.Senha:
