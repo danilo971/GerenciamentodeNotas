@@ -1,0 +1,22 @@
+
+Licença de Uso Restrito para UniGrader
+
+Direitos autorais (c) 2024 Danilo Silva Souza
+
+1. Permissão de Uso Limitada
+   Este algoritmo e seu código-fonte (o "Software") são licenciados exclusivamente para uso acadêmico e pessoal, conforme autorizado pelo autor Danilo Silva Souza. Não é permitido usar, copiar, modificar, distribuir, sublicenciar, vender ou compartilhar este código, no todo ou em parte, sem a autorização expressa e por escrito do autor.
+
+2. Autorização Exclusiva para Alterações
+   Somente WILLIAM SANTOS DE AMORIM está autorizado a modificar, atualizar ou ajustar o código-fonte do Software. Alterações feitas por qualquer outra pessoa são estritamente proibidas.
+
+3. Proibição de Divulgação
+   Este Software é confidencial. Qualquer tentativa de vazar, compartilhar, publicar ou disponibilizar o código-fonte, parcial ou integralmente, sem a permissão expressa do autor, é estritamente proibida e poderá resultar em ações legais.
+
+4. Isenção de Garantia
+   O Software é fornecido "como está", sem garantias de qualquer tipo, expressas ou implícitas, incluindo, mas não se limitando, às garantias de comerciabilidade, adequação a um propósito específico e não violação. O autor não será responsável por quaisquer danos, diretos ou indiretos, decorrentes do uso ou da impossibilidade de uso do Software.
+
+5. Limitações de Uso
+   O uso deste Software é limitado aos fins acadêmicos do trabalho da faculdade para o qual foi desenvolvido. Qualquer uso comercial ou que fuja do escopo educacional deve ser previamente autorizado pelo autor.
+
+6. Termos de Revogação
+   O autor se reserva o direito de revogar esta licença a qualquer momento, caso ocorra violação de qualquer um dos termos aqui estabelecidos.
