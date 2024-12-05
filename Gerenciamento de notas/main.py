@@ -8,7 +8,7 @@ class Application:
         self.tela()
         self.tela_login = Telalogin(self.janela)
         self.janela.mainloop()
-
+    
     def tema(self):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("dark-blue")

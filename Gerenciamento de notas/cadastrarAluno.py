@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 import sqlite3
+import os
 
 class backEnd:
     def connect_db(self):
@@ -11,22 +13,28 @@ class backEnd:
         self.conn.close()
 
 class AplicativoRegistro(backEnd):
-    def __init__(self):
+    def __init__(self, master):
+        self.master = master
         # Configuração principal
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
+        self.base_path = os.path.dirname(os.path.abspath(__file__))
 
         # Inicializa a janela principal
-        self.janela = ctk.CTk()
+        self.janela = ctk.CTkToplevel(self.master)
         self.janela.title("Aplicativo de Registro")
-        self.janela.geometry("600x500")
+        self.janela.geometry("600x600")
         self.janela.resizable(False, False)
 
-        # Variáveis
-        self.aceitar_var = ctk.StringVar(value="Não Aceito")
-        self.status_var = ctk.StringVar(value="Não Matriculado")
+        self.senha_visivel = False
 
-        # Elementos da interface
+
+        self.imagem_olho_claro_mostrar = ctk.CTkImage(
+            Image.open(os.path.join(self.base_path, "oii.png")), size=(24, 24))
+        self.imagem_olho_claro = ctk.CTkImage(
+            Image.open(os.path.join(self.base_path, "oiaa.png")), size=(24, 24))
+
+         #Elementos da interface
         self.criar_interface()
 
         # Inicia o loop principal
@@ -53,32 +61,69 @@ class AplicativoRegistro(backEnd):
     def criar_frame_usuario(self, parent):
         """Cria o frame para informações do aluno."""
         frame_usuario = ctk.CTkFrame(parent)
-        frame_usuario.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        frame_usuario.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+
+        frame_usuario.columnconfigure(0, weight=1)
+        frame_usuario.columnconfigure(1, weight=1)
+        frame_usuario.columnconfigure(2, weight=1)
 
         titulo_usuario = ctk.CTkLabel(frame_usuario, text="Informações do Aluno",
                                       font=ctk.CTkFont(size=16, weight="bold"))
         titulo_usuario.grid(row=0, column=0, columnspan=3, pady=(0, 10))
 
         # Campos de entrada para o usuário
-        ctk.CTkLabel(frame_usuario, text="Primeiro Nome").grid(row=1, column=0, padx=5, pady=5)
+        ctk.CTkLabel(frame_usuario, text="Primeiro Nome").grid(row=1, column=0, padx=5, pady=5,sticky="ew")
         self.entrada_primeiro_nome = ctk.CTkEntry(frame_usuario)
-        self.entrada_primeiro_nome.grid(row=2, column=0, padx=5, pady=5)
+        self.entrada_primeiro_nome.grid(row=2, column=0, padx=5, pady=5,sticky="ew")
 
-        ctk.CTkLabel(frame_usuario, text="Último Nome").grid(row=1, column=1, padx=5, pady=5)
+        ctk.CTkLabel(frame_usuario, text="Último Nome").grid(row=1, column=1, padx=5, pady=5,sticky="ew")
         self.entrada_ultimo_nome = ctk.CTkEntry(frame_usuario)
-        self.entrada_ultimo_nome.grid(row=2, column=1, padx=5, pady=5)
+        self.entrada_ultimo_nome.grid(row=2, column=1, padx=5, pady=5, sticky="ew")
 
-        ctk.CTkLabel(frame_usuario, text="CPF").grid(row=1, column=2, padx=5, pady=5)
+        ctk.CTkLabel(frame_usuario, text="CPF").grid(row=1, column=2, padx=5, pady=5, sticky="ew")
         self.entrada_cpf = ctk.CTkEntry(frame_usuario)
-        self.entrada_cpf.grid(row=2, column=2, padx=5, pady=5)
+        self.entrada_cpf.grid(row=2, column=2, padx=5, pady=5, sticky="ew")
 
-        ctk.CTkLabel(frame_usuario, text="Data de Nascimento").grid(row=3, column=0, padx=5, pady=5)
-        self.entrada_data_nascimento = ctk.CTkEntry(frame_usuario, placeholder_text="DD/MM/AAAA")
-        self.entrada_data_nascimento.grid(row=4, column=0, padx=5, pady=5)
+        ctk.CTkLabel(frame_usuario, text="                  Email").grid(row=3, column=0, padx=5, pady=5, columnspan=3, sticky="w")
+        self.Email = ctk.CTkEntry(frame_usuario)
+        self.Email.grid(row=4, column=0, columnspan=3, padx=5, pady=5, sticky="ew")
 
-        ctk.CTkLabel(frame_usuario, text="Nacionalidade").grid(row=3, column=1, padx=5, pady=5)
+        frame_senha = ctk.CTkFrame(frame_usuario)
+        frame_senha.grid(row=6, column=0, padx=5, pady=5, sticky="ew")
+
+        ctk.CTkLabel(frame_usuario, text="Senha").grid(row=5, column=0, padx=5, pady=5)
+        self.Senha = ctk.CTkEntry(frame_senha, show="*")
+        self.Senha.grid(row=6, column=0, padx=5, pady=5, sticky="ew")
+
+        self.botao_olho = ctk.CTkButton(
+            frame_senha,
+            image=self.imagem_olho_claro,
+            text="",
+            width=24,
+            height=24,
+            fg_color="transparent",
+            hover_color="lightgray",
+            command=self.alternar_visibilidade_senha
+        )
+        self.botao_olho.grid(row=6, column=1, padx=(0, 5), pady=5, sticky="w")
+
+        ctk.CTkLabel(frame_usuario, text="Data de Nascimento").grid(row=5, column=1, padx=5, pady=5)
+        self.DatadeNascimento = ctk.CTkEntry(frame_usuario, placeholder_text="DD/MM/AAAA")
+        self.DatadeNascimento.grid(row=6, column=1, padx=5, pady=5)
+
+        ctk.CTkLabel(frame_usuario, text="Nacionalidade").grid(row=5, column=2, padx=5, pady=5)
         self.combobox_nacionalidade = ctk.CTkComboBox(frame_usuario, values=["Brasileiro", "Estrangeiro"])
-        self.combobox_nacionalidade.grid(row=4, column=1, padx=5, pady=5)
+        self.combobox_nacionalidade.grid(row=6, column=2, padx=5, pady=5)
+
+    def alternar_visibilidade_senha(self):
+        """Alterna a visibilidade da senha."""
+        if self.senha_visivel:
+            self.Senha.configure(show="*")
+            self.botao_olho.configure(image=self.imagem_olho_claro)
+        else:
+            self.Senha.configure(show="")
+            self.botao_olho.configure(image=self.imagem_olho_claro_mostrar)
+        self.senha_visivel = not self.senha_visivel
 
     def criar_frame_cursos(self, parent):
         """Cria o frame para informações do curso."""
@@ -101,12 +146,14 @@ class AplicativoRegistro(backEnd):
             self.nome = self.entrada_primeiro_nome.get()
             self.sobrenome = self.entrada_ultimo_nome.get()
             self.cpf = self.entrada_cpf.get()
-            self.dataNascimento = self.entrada_data_nascimento.get()
+            self.email = self.Email.get()
+            self.senha = self.Senha.get()
+            self.dataNascimento = self.DatadeNascimento.get()
             self.nacionalidade = self.combobox_nacionalidade.get()
             self.semestre_selecionado = int(self.spinbox_cursos.get().split(" ")[0])
 
             # Verifica os campos obrigatórios
-            if not self.nome or not self.sobrenome or not self.cpf or not self.dataNascimento or not self.nacionalidade:
+            if not self.nome or not self.sobrenome or not self.cpf or not self.email or not self.nacionalidade:
                 messagebox.showwarning("Erro", "Todos os campos devem ser preenchidos.")
                 return
 
@@ -117,7 +164,7 @@ class AplicativoRegistro(backEnd):
                 INSERT INTO alunos (nome, sobrenome, cpf, data_nascimento, nacionalidade, semestre_ingresso)
                 VALUES (?, ?, ?, ?, ?, ?)
                 """,
-                (self.nome, self.sobrenome, self.cpf, self.dataNascimento, self.nacionalidade, self.semestre_selecionado)
+                (self.nome, self.sobrenome, self.cpf, self.email, self.nacionalidade, self.semestre_selecionado)
             )
             self.conn.commit()
             messagebox.showinfo("Sucesso", "Aluno registrado com sucesso!")
@@ -138,4 +185,7 @@ class AplicativoRegistro(backEnd):
         ...
 
 if __name__ == "__main__":
-    app = AplicativoRegistro()
+    root = ctk.CTk()  # Cria uma janela principal para testes
+    app = AplicativoRegistro(root)  # Passa a janela principal como `master`
+    root.mainloop()  # Inicia o loop principal
+

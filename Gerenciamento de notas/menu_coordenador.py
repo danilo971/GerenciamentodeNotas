@@ -2,6 +2,8 @@ import customtkinter as ctk
 from PIL import Image
 from cadastrarAluno import AplicativoRegistro
 from listAlunos import ListAlunos
+from cadastrarDisciplina import AplicativoDisciplina
+from cadastrarProfessor import AplicativoCadastroProfessor
 
 class MenuCoordenador(ctk.CTkFrame):
     def __init__(self, master=None):
@@ -15,15 +17,15 @@ class MenuCoordenador(ctk.CTkFrame):
 
         # Botões
         self.imagem_aluno = self.adicionar_aluno()
-        self.botao = ctk.CTkButton(self, image=self.imagem_aluno, text="   Adicionar Aluno  ", compound="left", command=AplicativoRegistro)
+        self.botao = ctk.CTkButton(self, image=self.imagem_aluno, text="   Adicionar Aluno  ", compound="left", command=self.abrir_cadastrar_aluno)
         self.botao.grid(row=1, column=1, padx=20, pady=10) 
 
         self.imagem_professor = self.adicionar_professor()
-        self.botaoProfessor = ctk.CTkButton(self, image=self.imagem_professor, text="Adicionar Professor ", compound="left", command=self.acao_professor)
+        self.botaoProfessor = ctk.CTkButton(self, image=self.imagem_professor, text="Adicionar Professor ", compound="left", command=AplicativoCadastroProfessor)
         self.botaoProfessor.grid(row=1, column=2, padx=20, pady=10)
 
         self.imagem_disciplina = self.adicionar_disciplina()
-        self.botaoDisciplina = ctk.CTkButton(self, image=self.imagem_disciplina, text="Adicionar Disciplina", compound="left", command=self.acao_disciplina)
+        self.botaoDisciplina = ctk.CTkButton(self, image=self.imagem_disciplina, text="Adicionar Disciplina", compound="left", command=AplicativoDisciplina)
         self.botaoDisciplina.grid(row=1, column=3, padx=20, pady=10)
 
         self.imagem_listar_alunos = self.listar_alunos()
@@ -45,6 +47,10 @@ class MenuCoordenador(ctk.CTkFrame):
         else:
             return ctk.CTkImage(Image.open("add_user_dark.png"), size=(50, 50))
 
+
+    def abrir_cadastrar_aluno(self):
+        # Passa a janela principal (master) para a classe AplicativoRegistro
+        AplicativoRegistro(self.master)
 
     def adicionar_disciplina(self):
         if ctk.get_appearance_mode() == "Dark":
